@@ -13,10 +13,10 @@ Date: 09/19/2024
 
 using namespace std;
 
-vector<int> results;
-
-int evaluatePossibleScenariosRecursively(string expression, int operatorNumber)
+vector<int> diffWaysToCompute(string expression) 
 {
+    vector<int> results;
+
     // Check how many operators string have
     vector<int> operatorLocations;
     for (size_t i = 0; i < expression.size(); i++)
@@ -29,7 +29,7 @@ int evaluatePossibleScenariosRecursively(string expression, int operatorNumber)
 
     if (operatorLocations.size() == 0)
     {
-        return atoi(expression.c_str());
+        results.push_back(atoi(expression.c_str()));
     }
     else if (operatorLocations.size() == 1)
     {
@@ -39,18 +39,22 @@ int evaluatePossibleScenariosRecursively(string expression, int operatorNumber)
         int first = atoi(expression.substr(0,index).c_str());
         int second = atoi(expression.substr(index+1, expression.size()-index-1).c_str());
 
+        int result;
         switch (expression[index])
         {
         case '+':
-            return first + second;
+            result = first + second;
             break;
         case '-':
-            return first - second;
+            result = first - second;
+            break;
         case '*':
         default:
-            return first*second;
+            result = first * second;
             break;
         }
+
+        results.push_back(result);
     }
     else
     {
@@ -61,47 +65,53 @@ int evaluatePossibleScenariosRecursively(string expression, int operatorNumber)
             string second = expression.substr(index+1, expression.size()-index-1);
 
             int result;
+
+            vector<int> firstResults = diffWaysToCompute(first);
+            vector<int> secondResults = diffWaysToCompute(second);
+
             switch (expression[index])
             {
-            case '+':
-                result = evaluatePossibleScenariosRecursively(first, operatorNumber) + evaluatePossibleScenariosRecursively(second, operatorNumber);
-                break;
-            case '-':
-                result = evaluatePossibleScenariosRecursively(first, operatorNumber) - evaluatePossibleScenariosRecursively(second, operatorNumber);
-                break;
-            case '*':
-            default:
-                result = evaluatePossibleScenariosRecursively(first, operatorNumber) * evaluatePossibleScenariosRecursively(second, operatorNumber);
-                break;
-            }
-
-            if (operatorLocations.size() == operatorNumber)
-            {
-                // Add result to set
-                results.push_back(result);
-            }
-            else
-            {
-                return result;
+                case '+':
+                {
+                    for (size_t i = 0; i < firstResults.size(); i++)
+                    {
+                        for (size_t j = 0; j < secondResults.size(); j++)
+                        {
+                            result = firstResults[i] + secondResults[j];
+                            results.push_back(result);
+                        }
+                    }
+                    break;
+                }
+                case '-':
+                {
+                    for (size_t i = 0; i < firstResults.size(); i++)
+                    {
+                        for (size_t j = 0; j < secondResults.size(); j++)
+                        {
+                            result = firstResults[i] - secondResults[j];
+                            results.push_back(result);
+                        }
+                    }
+                    break;
+                }
+                case '*':
+                default:
+                {
+                    for (size_t i = 0; i < firstResults.size(); i++)
+                    {
+                        for (size_t j = 0; j < secondResults.size(); j++)
+                        {
+                            result = firstResults[i] * secondResults[j];
+                            results.push_back(result);
+                        }
+                    }
+                    break;
+                }
             }
         }
     }
 
-    return 0;
-}
-
-vector<int> diffWaysToCompute(string expression) 
-{
-    int operatorNumber = 0;
-    for (size_t i = 0; i < expression.size(); i++)
-    {
-        if (expression[i] == '+' || expression[i] == '-' || expression[i] == '*')
-        {
-            operatorNumber++;
-        }
-    }
-
-    evaluatePossibleScenariosRecursively(expression, operatorNumber);
     return results;
 }
 
