@@ -62,7 +62,7 @@ vector<string> uncommonFromSentences(string s1, string s2) {
         }
     }
     
-    // Check the words occurs once
+    // Check the words occur once
     for ( auto &item : wordCountMap )
     {
         if (item.second == 1)
