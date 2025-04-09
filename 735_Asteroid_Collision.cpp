@@ -1,13 +1,11 @@
 /*
 LeetCode 735. Asteroid Collision
 Author: Yahya Sungur
-Date: 11/01/2024
+Date: 04/09/2025
 */
 
 #include <iostream>
-#include <string>
 #include <vector>
-#include <math.h>
 #include <stack>
 
 using namespace std;
